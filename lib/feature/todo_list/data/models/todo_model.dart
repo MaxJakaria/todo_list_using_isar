@@ -1,9 +1,10 @@
 import 'package:isar/isar.dart';
+import 'package:todo_list_using_isar/feature/todo_list/domain/entities/todo.dart';
 
 part 'todo_model.g.dart';
 
 @Collection()
-class TodoModel {
+class TodoModel extends Todo {
   Id isarId = Isar.autoIncrement; // Internal Isar ID
 
   @Index(unique: true) // Useful for queries by app-specific ID
@@ -20,7 +21,13 @@ class TodoModel {
     required this.details,
     required this.isComplete,
     required this.updatedAt,
-  });
+  }) : super(
+         id: id,
+         title: title,
+         details: details,
+         isComplete: isComplete,
+         updatedAt: updatedAt,
+       );
 
   // Conversion from domain entity
   factory TodoModel.fromEntity(TodoModel todo) {

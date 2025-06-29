@@ -6,7 +6,8 @@ import 'package:todo_list_using_isar/feature/todo_list/presentation/pages/todo_h
 import 'package:todo_list_using_isar/init_dependencies.dart';
 
 void main() async {
-  initDependencies();
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MyApp());
 }
 

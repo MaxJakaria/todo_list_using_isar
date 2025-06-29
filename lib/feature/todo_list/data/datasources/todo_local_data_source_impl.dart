@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 import 'package:todo_list_using_isar/feature/todo_list/data/datasources/todo_local_data_source.dart';
 import 'package:todo_list_using_isar/feature/todo_list/data/models/todo_model.dart';
 
-class TodoLocalDataSourceImpl implements TodoLocalDatasource {
+class TodoLocalDataSourceImpl implements TodoLocalDataSource {
   final Isar isar;
 
   TodoLocalDataSourceImpl({required this.isar});
@@ -36,13 +36,26 @@ class TodoLocalDataSourceImpl implements TodoLocalDatasource {
   }
 
   @override
+  @override
   Future<TodoModel> updateTodo(TodoModel todo) async {
-    final todoModel = TodoModel.fromEntity(todo);
+    // Get the existing TodoModel with correct isarId
+    final existing = await isar.todoModels
+        .filter()
+        .idEqualTo(todo.id)
+        .findFirst();
+
+    if (existing == null) {
+      throw Exception('Todo with id ${todo.id} not found');
+    }
+
+    // Set the isarId from existing model to avoid unique index violation
+    todo.isarId = existing.isarId;
+
     await isar.writeTxn(() async {
-      await isar.todoModels.put(todoModel);
+      await isar.todoModels.put(todo); // Now it's a true update
     });
 
-    return todoModel.toEntity();
+    return todo.toEntity();
   }
 
   @override
