@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_list_using_isar/core/common/loading_indecator.dart';
 import 'package:todo_list_using_isar/core/common/snack_bar.dart';
 import 'package:todo_list_using_isar/feature/todo_list/presentation/bloc/todo_bloc.dart';
+import 'package:todo_list_using_isar/feature/todo_list/presentation/pages/todo_details_page.dart';
 import 'package:todo_list_using_isar/feature/todo_list/presentation/utils/show_todo_add_dialog.dart';
 import 'package:todo_list_using_isar/feature/todo_list/presentation/utils/show_todo_delete_dialog.dart';
 import 'package:todo_list_using_isar/feature/todo_list/presentation/utils/show_todo_edit_dialog.dart';
@@ -55,7 +56,9 @@ class _TodoHomePageState extends State<TodoHomePage> {
                   ),
                 );
               },
-              onTap: (todo) {},
+              onTap: (todo) {
+                Navigator.push(context, TodoDetailsPage.route(todo));
+              },
             );
           }
 
