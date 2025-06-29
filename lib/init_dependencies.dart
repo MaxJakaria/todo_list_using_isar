@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:todo_list_using_isar/feature/todo_list/data/repositories/todo_repository_impl.dart';
 import 'package:todo_list_using_isar/feature/todo_list/domain/repositories/todo_repository.dart';
 import 'package:todo_list_using_isar/feature/todo_list/domain/usecases/add_todo.dart';
 import 'package:todo_list_using_isar/feature/todo_list/domain/usecases/delete_todo.dart';
@@ -10,7 +11,9 @@ import 'package:todo_list_using_isar/feature/todo_list/presentation/bloc/todo_bl
 final serviceLocator = GetIt.instance;
 Future<void> initDependencies() async {
   // Repository
-  serviceLocator.registerLazySingleton<TodoRepository>(() => serviceLocator());
+  serviceLocator.registerLazySingleton<TodoRepository>(
+    () => TodoRepositoryImpl(),
+  );
 
   // Use cases
   serviceLocator.registerLazySingleton(

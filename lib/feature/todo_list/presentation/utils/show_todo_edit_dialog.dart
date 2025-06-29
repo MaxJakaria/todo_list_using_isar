@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_list_using_isar/core/common/text_field_config.dart';
+import 'package:todo_list_using_isar/feature/todo_list/presentation/bloc/todo_bloc.dart';
 import 'package:todo_list_using_isar/feature/todo_list/presentation/widgets/todo_dialog.dart';
 
 Future<void> showTodoEditDialog({
@@ -28,6 +30,14 @@ Future<void> showTodoEditDialog({
       ],
       actionButtonText: 'Update',
       onAction: (data) {
+        context.read<TodoBloc>().add(
+          UpdateTodoEvent(
+            id: id,
+            title: data['todoTitle'],
+            details: data['todoDetails'],
+            updatedAt: DateTime.now(),
+          ),
+        );
         Navigator.pop(context);
       },
       onCancel: () => Navigator.pop(context),
