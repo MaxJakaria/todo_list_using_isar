@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+import 'package:todo_list_using_isar/core/common/text_field_config.dart';
+import 'package:todo_list_using_isar/feature/todo_list/presentation/widgets/todo_dialog.dart';
+
+Future<void> showTodoEditDialog({
+  required BuildContext context,
+  required String id,
+  required String initialTitle,
+  required String initialDetails,
+}) async {
+  await showDialog<Map<String, String>>(
+    context: context,
+    builder: (_) => TodoDialog(
+      dialogTitle: 'Edit Todo Item',
+      fields: [
+        TextFieldConfig(
+          id: 'todoTitle',
+          labelText: 'Title',
+          initialValue: initialTitle,
+          isBlankError: true,
+        ),
+        TextFieldConfig(
+          id: 'todoDetails',
+          labelText: 'Details',
+          initialValue: initialDetails,
+          maxLines: 4,
+        ),
+      ],
+      actionButtonText: 'Update',
+      onAction: (data) {
+        Navigator.pop(context);
+      },
+      onCancel: () => Navigator.pop(context),
+    ),
+  );
+}
