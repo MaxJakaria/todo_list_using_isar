@@ -1,16 +1,61 @@
-# todo_list_using_isar
+# 📝 ToDo List Using Isar DB
 
-A new Flutter project.
+A new **Flutter project** demonstrating a ToDo List app.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Getting Started
 
-A few resources to get you started if this is your first Flutter project:
+Before integrating **Isar** (a high-performance local NoSQL database), follow the steps below to prepare your project.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🔧 Android Build Configuration (Required for Isar)
+
+To properly set up Isar and ensure a clean build process, **edit** your `android/build.gradle.kts` file as follows:
+
+```kotlin
+import com.android.build.gradle.BaseExtension
+import org.gradle.api.Project
+import org.gradle.api.tasks.Delete
+import org.gradle.api.file.Directory
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
+rootProject.layout.buildDirectory.set(newBuildDir)
+
+subprojects {
+    afterEvaluate {
+        // this: Project
+        if (plugins.hasPlugin("com.android.application") || plugins.hasPlugin("com.android.library")) {
+            extensions.configure<com.android.build.gradle.BaseExtension>("android") {
+                compileSdkVersion(34)
+                buildToolsVersion("34.0.0")
+            }
+        }
+
+        if (extensions.findByName("android") != null) {
+            extensions.configure<com.android.build.gradle.BaseExtension>("android") {
+                if (namespace == null) {
+                    namespace = group.toString()
+                }
+            }
+        }
+    }
+
+    val newSubprojectBuildDir = newBuildDir.dir(name)
+    layout.buildDirectory.set(newSubprojectBuildDir)
+}
+
+subprojects { evaluationDependsOn(":app") }
+
+tasks.register<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
+}
+```
