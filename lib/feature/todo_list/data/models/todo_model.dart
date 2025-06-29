@@ -8,26 +8,16 @@ class TodoModel extends Todo {
   Id isarId = Isar.autoIncrement; // Internal Isar ID
 
   @Index(unique: true) // Useful for queries by app-specific ID
-  late String id;
-
-  late String title;
-  late String details;
-  late bool isComplete;
-  late DateTime updatedAt;
+  @override
+  String get id => super.id;
 
   TodoModel({
-    required this.id,
-    required this.title,
-    required this.details,
-    required this.isComplete,
-    required this.updatedAt,
-  }) : super(
-         id: id,
-         title: title,
-         details: details,
-         isComplete: isComplete,
-         updatedAt: updatedAt,
-       );
+    required super.id,
+    required super.title,
+    required super.details,
+    required super.isComplete,
+    required super.updatedAt,
+  });
 
   // Conversion from domain entity
   factory TodoModel.fromEntity(TodoModel todo) {
