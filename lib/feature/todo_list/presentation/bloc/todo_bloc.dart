@@ -38,7 +38,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     LoadTodosEvent event,
     Emitter<TodoState> emit,
   ) async {
-    emit(TodoLoading());
     final result = await getTodos(NoParams());
     result.fold(
       (failure) => emit(TodoError(failure.message)),
