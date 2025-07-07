@@ -10,6 +10,7 @@ abstract interface class TodoRepository {
     required String details,
     required bool isComplete,
     required DateTime updatedAt,
+    required DateTime scheduledTime,
   });
   Future<Either<Failure, Todo>> updateTodo({
     required String id,
@@ -17,6 +18,7 @@ abstract interface class TodoRepository {
     String? details,
     bool? isComplete,
     DateTime? updatedAt,
+    DateTime? scheduledTime,
   });
   Future<Either<Failure, void>> deleteTodo({required String id});
 }

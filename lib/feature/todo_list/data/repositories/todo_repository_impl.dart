@@ -17,6 +17,7 @@ class TodoRepositoryImpl implements TodoRepository {
     required String details,
     required bool isComplete,
     required DateTime updatedAt,
+    required DateTime scheduledTime,
   }) async {
     try {
       final newTodo = TodoModel(
@@ -25,6 +26,7 @@ class TodoRepositoryImpl implements TodoRepository {
         details: details,
         isComplete: isComplete,
         updatedAt: updatedAt,
+        scheduledTime: scheduledTime,
       );
       final result = await todoLocalDataSource.addTodo(newTodo);
       return Right(result);
@@ -60,6 +62,7 @@ class TodoRepositoryImpl implements TodoRepository {
     String? details,
     bool? isComplete,
     DateTime? updatedAt,
+    DateTime? scheduledTime,
   }) async {
     try {
       final existing = (await todoLocalDataSource.getTodos()).firstWhere(
@@ -71,6 +74,7 @@ class TodoRepositoryImpl implements TodoRepository {
         details: details,
         isComplete: isComplete,
         updatedAt: updatedAt ?? DateTime.now(),
+        scheduledTime: scheduledTime,
       );
 
       final result = await todoLocalDataSource.updateTodo(updated);

@@ -17,6 +17,7 @@ class TodoModel extends Todo {
     required super.details,
     required super.isComplete,
     required super.updatedAt,
+    required super.scheduledTime,
   });
 
   // Conversion from domain entity
@@ -27,6 +28,7 @@ class TodoModel extends Todo {
       details: todo.details,
       isComplete: todo.isComplete,
       updatedAt: todo.updatedAt,
+      scheduledTime: todo.scheduledTime,
     );
   }
 
@@ -38,6 +40,7 @@ class TodoModel extends Todo {
       details: details,
       isComplete: isComplete,
       updatedAt: updatedAt,
+      scheduledTime: scheduledTime,
     );
   }
 
@@ -47,6 +50,7 @@ class TodoModel extends Todo {
     String? details,
     bool? isComplete,
     DateTime? updatedAt,
+    DateTime? scheduledTime,
   }) {
     return TodoModel(
       id: id ?? this.id,
@@ -54,6 +58,7 @@ class TodoModel extends Todo {
       details: details ?? this.details,
       isComplete: isComplete ?? this.isComplete,
       updatedAt: updatedAt ?? this.updatedAt,
+      scheduledTime: scheduledTime ?? this.scheduledTime,
     );
   }
 }

@@ -17,6 +17,7 @@ class UpdateTodo implements Usecase<Todo, UpdateTodoParams> {
       details: params.details,
       isComplete: params.isComplete,
       updatedAt: params.updatedAt,
+      scheduledTime: params.scheduledTime,
     );
   }
 }
@@ -27,6 +28,7 @@ class UpdateTodoParams {
   String? details;
   bool? isComplete;
   DateTime? updatedAt;
+  DateTime? scheduledTime;
 
   UpdateTodoParams({
     required this.id,
@@ -34,5 +36,6 @@ class UpdateTodoParams {
     this.details,
     this.isComplete,
     this.updatedAt,
+    this.scheduledTime,
   });
 }

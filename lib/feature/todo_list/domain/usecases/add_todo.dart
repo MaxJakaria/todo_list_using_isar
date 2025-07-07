@@ -16,6 +16,7 @@ class AddTodo implements Usecase<Todo, AddTodoParams> {
       details: params.details,
       isComplete: params.isComplete,
       updatedAt: params.updatedAt,
+      scheduledTime: params.scheduledTime,
     );
   }
 }
@@ -25,11 +26,13 @@ class AddTodoParams {
   final String details;
   final bool isComplete;
   final DateTime updatedAt;
+  final DateTime scheduledTime;
 
   AddTodoParams({
     required this.title,
     required this.details,
     required this.isComplete,
     required this.updatedAt,
+    required this.scheduledTime,
   });
 }

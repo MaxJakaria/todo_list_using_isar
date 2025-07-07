@@ -25,6 +25,7 @@ Future<void> showTodoAddDialog({required BuildContext context}) async {
             details: data['todoDetails']!,
             isComplete: false,
             updatedAt: DateTime.now(),
+            scheduledTime: DateTime.now(), // temp data
           ),
         );
         Navigator.pop(context);

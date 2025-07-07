@@ -4,6 +4,7 @@ class Todo {
   final String details;
   final bool isComplete;
   final DateTime updatedAt;
+  final DateTime scheduledTime;
 
   Todo({
     required this.id,
@@ -11,5 +12,6 @@ class Todo {
     required this.details,
     required this.isComplete,
     required this.updatedAt,
+    required this.scheduledTime,
   });
 }

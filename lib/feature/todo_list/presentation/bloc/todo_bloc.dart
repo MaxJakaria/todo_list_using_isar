@@ -32,6 +32,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<UpdateTodoEvent>(_onUpdateTodo);
     on<DeleteTodoEvent>(_onDeleteTodo);
     on<StartWatchTodosEvent>(_onStartWatchTodos);
+    on<LoadTodosByDateEvent>(_onLoadTodosByDate);
   }
 
   Future<void> _onLoadTodos(
@@ -52,11 +53,12 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         details: event.details,
         isComplete: event.isComplete,
         updatedAt: event.updatedAt,
+        scheduledTime: event.scheduledTime,
       ),
     );
     result.fold(
       (failure) => emit(TodoError(failure.message)),
-      (_) => add(const LoadTodosEvent()),
+      (_) => add(const StartWatchTodosEvent()), // Refresh todos after add
     );
   }
 
@@ -71,11 +73,12 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         details: event.details,
         isComplete: event.isComplete,
         updatedAt: event.updatedAt,
+        scheduledTime: event.scheduledTime, // Pass scheduledTime
       ),
     );
     result.fold(
       (failure) => emit(TodoError(failure.message)),
-      (_) => add(const LoadTodosEvent()),
+      (_) => add(const StartWatchTodosEvent()), // Refresh todos after update
     );
   }
 
@@ -86,7 +89,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     final result = await deleteTodo(DeleteTodoParams(id: event.id));
     result.fold(
       (failure) => emit(TodoError(failure.message)),
-      (_) => add(const LoadTodosEvent()),
+      (_) => add(const StartWatchTodosEvent()), // Refresh todos after delete
     );
   }
 
@@ -94,14 +97,37 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     StartWatchTodosEvent event,
     Emitter<TodoState> emit,
   ) async {
-    emit(const TodoLoaded([]));
+    emit(TodoLoading()); // Emit loading state before starting to watch
 
     await emit.forEach<Either<Failure, List<Todo>>>(
-      watchTodos(NoParams()),
-      onData: (result) => result.fold(
-        (failure) => TodoError(failure.message),
-        (todos) => TodoLoaded(todos),
-      ),
+      watchTodos(NoParams()), // Still watch all todos from repo
+      onData: (result) => result.fold((failure) => TodoError(failure.message), (
+        todos,
+      ) {
+        // Filter todos based on selectedDate here in the BLoC for convenience
+        // If event.selectedDate is null, show all. Otherwise, filter by date.
+        if (event.selectedDate != null) {
+          final filteredTodos = todos.where((todo) {
+            return todo.scheduledTime.year == event.selectedDate!.year &&
+                todo.scheduledTime.month == event.selectedDate!.month &&
+                todo.scheduledTime.day == event.selectedDate!.day;
+          }).toList();
+          return TodoLoaded(filteredTodos);
+        }
+        return TodoLoaded(todos); // No filter applied
+      }),
+      onError: (error, stackTrace) => TodoError(error.toString()),
     );
+  }
+
+  // New event handler for loading todos by a specific date
+  Future<void> _onLoadTodosByDate(
+    LoadTodosByDateEvent event,
+    Emitter<TodoState> emit,
+  ) async {
+    // Here, we emit a loading state and then start watching filtered todos
+    emit(TodoLoading());
+    // Re-use StartWatchTodosEvent but with the specific date
+    add(StartWatchTodosEvent(selectedDate: event.date));
   }
 }
